@@ -10,6 +10,7 @@ class ExperimentState extends Cubit<Map<String, bool>> {
   static const String COLLECTION_ID = "collection_system";
   static const String DONATION_EXPERIMENT = "total_donation_experiment";
   static const String DATA_MANAGER_EXPERIMENT = "data_manager_experiment";
+  static const String SKIP_ONBOARDING_EXPERIMENT = "skip_onboarding_experiment";
 
   ExperimentState() : super({COLLECTION_ID: false}) {
     _reload();
@@ -75,6 +76,16 @@ class ExperimentState extends Cubit<Map<String, bool>> {
         ._setExperiment(DATA_MANAGER_EXPERIMENT, isOnState);
   }
 
+  static bool isSkipOnboardingExperimentOn(BuildContext context) {
+    return BlocProvider.of<ExperimentState>(context)
+        ._isExperimentOn(SKIP_ONBOARDING_EXPERIMENT);
+  }
+
+  static void setSkipOnboardingExperiment(BuildContext context, bool isOnState) {
+    BlocProvider.of<ExperimentState>(context)
+        ._setExperiment(SKIP_ONBOARDING_EXPERIMENT, isOnState);
+  }
+
   static String getCollectionID() {
     return COLLECTION_ID;
   }
@@ -95,7 +106,12 @@ class ExperimentState extends Cubit<Map<String, bool>> {
           DATA_MANAGER_EXPERIMENT,
           "Data Manager Experiment",
           ExperimentState.setDataMangementExperiment,
-          ExperimentState.isDataMangementExperimentOn)
+          ExperimentState.isDataMangementExperimentOn),
+      Experiment(
+          SKIP_ONBOARDING_EXPERIMENT,
+          "Skip Onboarding Steps",
+          ExperimentState.setSkipOnboardingExperiment,
+          ExperimentState.isSkipOnboardingExperimentOn)
     ];
   }
 }

@@ -10,8 +10,9 @@ import 'package:flutter/widgets.dart';
 
 class BattlepassOnboarding extends StatefulWidget {
   final VoidCallback _closeModal;
+  final bool skipOnboarding;
 
-  const BattlepassOnboarding(this._closeModal, {super.key});
+  const BattlepassOnboarding(this._closeModal, {this.skipOnboarding = false, super.key});
 
   @override
   BattlepassOnboardingState createState() => BattlepassOnboardingState();
@@ -22,6 +23,7 @@ class BattlepassOnboardingState extends State<BattlepassOnboarding> {
 
   int pageIndex = 0;
   List<Widget> pages = [];
+  bool _hasCheckedSkipOnboarding = false;
 
   void nextModalPage() {
     pageIndex = 1;
@@ -55,6 +57,23 @@ class BattlepassOnboardingState extends State<BattlepassOnboarding> {
     pages.add(DebugResultsView(widget._closeModal));
 
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasCheckedSkipOnboarding) {
+      _hasCheckedSkipOnboarding = true;
+      if (widget.skipOnboarding) {
+        // Skip to scanning page (index 3)
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _pageController.jumpToPage(3);
+          setState(() {
+            pageIndex = 3;
+          });
+        });
+      }
+    }
   }
 
   @override

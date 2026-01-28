@@ -1,3 +1,4 @@
+import 'package:bey_stats/app_states/experiment_state.dart';
 import 'package:bey_stats/views/battlepass/onboarding/battlepass_onboarding.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,8 @@ class BattlepassModal extends StatelessWidget {
     return FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () {
+          // Read experiment value before opening modal (while we have BlocProvider access)
+          final skipOnboarding = ExperimentState.isSkipOnboardingExperimentOn(context);
           showModalBottomSheet<void>(
               context: context,
               builder: (BuildContext context) {
@@ -22,7 +25,8 @@ class BattlepassModal extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                             child: BattlepassOnboarding(
-                                () => Navigator.pop(context)))
+                                () => Navigator.pop(context),
+                                skipOnboarding: skipOnboarding))
                       ],
                     ),
                   ),
